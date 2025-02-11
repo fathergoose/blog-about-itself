@@ -13,21 +13,23 @@ async function combineHtml(parentFile, childContent) {
   return result;
 }
 
+async function buildPages(sourcePath, )
+
 try {
   const controller = new AbortController();
   const { signal } = controller;
 
-  const TEMPLATE = "./www/index.html";
+  const TEMPLATE = "./src/templates/index.html";
 
   (async () => {
-    for await (const path of glob("./src/docs/public/**/*.md")) {
+    for await (const path of glob("./src/articles/public/**/*.md")) {
       const data = await readFile(path, { encoding: "utf8" });
       const md = markdownit();
       const child = md.render(data);
       const resultHtml = await combineHtml(TEMPLATE, child);
       const outFile = path.replace(
-        /src\/docs\/public\/(.*)\.md/,
-        "./www/articles/$1.html",
+        /src\/articles\/public\/(.*)\.md/,
+        "./www/$1.html",
       );
       const htmlData = new Uint8Array(Buffer.from(resultHtml));
       await writeFile(outFile, htmlData);

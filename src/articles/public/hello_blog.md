@@ -2,7 +2,7 @@
 
 ## This is a test
 
-What's up? It's me U+1F601
+What's up? It's me &#128513;
 
 ```sh
 echo "void" >> /dev/null
