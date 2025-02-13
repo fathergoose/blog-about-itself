@@ -16,13 +16,9 @@ async function buildPages() {
       recursive: true,
     });
 
-    console.log("files", files);
-
     const mdFilePaths = files
       .filter((path) => path.slice(-3) === ".md")
       .map((fileName) => `${basePath}${fileName}`);
-
-    console.log("mdFiles", mdFilePaths);
 
     mdFilePaths.forEach(async (file) => {
       const data = await readFile(file, { encoding: "utf8" });
