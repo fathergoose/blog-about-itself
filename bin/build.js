@@ -1,40 +1,57 @@
 import markdownit from "markdown-it";
-import { readFile, glob, writeFile } from "node:fs/promises";
+import { cp, readdir, readFile, writeFile } from "node:fs/promises";
 import { Buffer } from "node:buffer";
 
-async function combineHtml(parentFile, childContent) {
-  // Read the parent HTML file
-  const parentContent = await readFile(parentFile, "utf8");
-
-  // Replace the template string with the child HTML content
-  const result = parentContent.replace("{{___article_text___}}", childContent);
-
-  // Return the combined HTML content
+async function combineHtml(template, childContent) {
+  const result = template.replace("{{___article_text___}}", childContent);
   return result;
 }
 
-async function buildPages(sourcePath, )
-
-try {
-  const controller = new AbortController();
-  const { signal } = controller;
-
+async function buildPages() {
   const TEMPLATE = "./src/templates/index.html";
 
   (async () => {
-    for await (const path of glob("./src/articles/public/**/*.md")) {
-      const data = await readFile(path, { encoding: "utf8" });
+    const basePath = "./src/articles/public/";
+    const files = await readdir(basePath, {
+      recursive: true,
+    });
+
+    console.log("files", files);
+
+    const mdFilePaths = files
+      .filter((path) => path.slice(-3) === ".md")
+      .map((fileName) => `${basePath}${fileName}`);
+
+    console.log("mdFiles", mdFilePaths);
+
+    mdFilePaths.forEach(async (file) => {
+      const data = await readFile(file, { encoding: "utf8" });
       const md = markdownit();
-      const child = md.render(data);
-      const resultHtml = await combineHtml(TEMPLATE, child);
-      const outFile = path.replace(
+      const innerHtml = md.render(data);
+      const parentContent = await readFile(TEMPLATE, "utf8");
+      const resultHtml = await combineHtml(parentContent, innerHtml);
+      const outFile = file.replace(
         /src\/articles\/public\/(.*)\.md/,
         "./www/$1.html",
       );
       const htmlData = new Uint8Array(Buffer.from(resultHtml));
       await writeFile(outFile, htmlData);
-    }
+    });
   })();
+}
+
+async function buildStyles() {
+  // Keep it simple for now while keeping the pattern
+  await cp("./src/styles/style.css", "./www/css/style.css");
+}
+async function copyStaticFiles() {
+  await cp("./src/static/", "./www/", { recursive: true });
+}
+
+try {
+  await buildPages();
+  await buildStyles();
+  await copyStaticFiles();
 } catch (err) {
   console.error(err);
 }
