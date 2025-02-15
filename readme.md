@@ -17,9 +17,16 @@
 
 ## Goals
 
+### Round 1
+
 - [x] Compose articles like code in markdown
 - [x] Build process to transform markdown to html nodes
 - [x] Build process to combine markdown output into full documents
 - [x] Simple CSS
 - [x] Document the build process
 - [ ] An article describing what I've done
+
+### Extras
+
+- [ ] Full Minification
+- [ ] Dev and Prod builds?

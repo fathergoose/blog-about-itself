@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import markdownit from "markdown-it";
 import { cp, readdir, readFile, writeFile } from "node:fs/promises";
 import { Buffer } from "node:buffer";
@@ -36,17 +38,13 @@ async function buildPages() {
   })();
 }
 
-async function buildStyles() {
-  // Keep it simple for now while keeping the pattern
-  await cp("./src/styles/style.css", "./www/css/style.css");
-}
 async function copyStaticFiles() {
   await cp("./src/static/", "./www/", { recursive: true });
 }
 
 try {
   await buildPages();
-  await buildStyles();
+  // await buildStyles();
   await copyStaticFiles();
 } catch (err) {
   console.error(err);
