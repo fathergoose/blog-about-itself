@@ -1,15 +1,26 @@
 #!/usr/bin/env node
 
 import markdownit from "markdown-it";
-import { cp, readdir, readFile, writeFile } from "node:fs/promises";
+import { readFile, glob, writeFile } from "node:fs/promises";
 import { Buffer } from "node:buffer";
 
-async function combineHtml(template, childContent) {
-  const result = template.replace("{{___article_text___}}", childContent);
+async function combineHtml(parentFile, childContent) {
+  // Read the parent HTML file
+  const parentContent = await readFile(parentFile, "utf8");
+
+  // Replace the template string with the child HTML content
+  const result = parentContent.replace("{{___article_text___}}", childContent);
+
+  // Return the combined HTML content
   return result;
 }
 
-async function buildPages() {
+async function buildPages(sourcePath, )
+
+try {
+  const controller = new AbortController();
+  const { signal } = controller;
+
   const TEMPLATE = "./src/templates/index.html";
 
   (async () => {
@@ -25,27 +36,16 @@ async function buildPages() {
     mdFilePaths.forEach(async (file) => {
       const data = await readFile(file, { encoding: "utf8" });
       const md = markdownit();
-      const innerHtml = md.render(data);
-      const parentContent = await readFile(TEMPLATE, "utf8");
-      const resultHtml = await combineHtml(parentContent, innerHtml);
-      const outFile = file.replace(
+      const child = md.render(data);
+      const resultHtml = await combineHtml(TEMPLATE, child);
+      const outFile = path.replace(
         /src\/articles\/public\/(.*)\.md/,
         "./www/$1.html",
       );
       const htmlData = new Uint8Array(Buffer.from(resultHtml));
       await writeFile(outFile, htmlData);
-    });
+    }
   })();
-}
-
-async function copyStaticFiles() {
-  await cp("./src/static/", "./www/", { recursive: true });
-}
-
-try {
-  await buildPages();
-  // await buildStyles();
-  await copyStaticFiles();
 } catch (err) {
   console.error(err);
 }
