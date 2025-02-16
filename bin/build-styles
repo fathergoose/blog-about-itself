@@ -1,7 +1,7 @@
 #!/bin/sh
 
 npx @tailwindcss/cli \
-  --cwd=src \
-  --input=styles/style.css \
-  --output=../www/css/style.css \
-  --minify
+  --cwd=www \
+  --input=../src/styles/style.css \
+  --output=css/style.css
+# --minify

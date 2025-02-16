@@ -10,7 +10,7 @@ async function combineHtml(template, childContent) {
 }
 
 async function buildPages() {
-  const TEMPLATE = "./src/templates/index.html";
+  const TEMPLATE = "./src/templates/articles.template.html";
 
   (async () => {
     const basePath = "./src/articles/public/";
