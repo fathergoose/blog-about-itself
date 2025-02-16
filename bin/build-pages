@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import markdownit from "markdown-it";
-import { readFile, glob, writeFile } from "node:fs/promises";
+import { readFile, readdir, writeFile } from "node:fs/promises";
 import { Buffer } from "node:buffer";
 
 async function combineHtml(parentFile, childContent) {
@@ -29,18 +29,23 @@ async function buildPages() {
       .map((fileName) => `${basePath}${fileName}`);
 
     mdFilePaths.forEach(async (file) => {
+      const outFile = file.replace(
+        /src\/articles\/public\/(.*)\.md/,
+        "./www/$1.html",
+      );
+      console.log(`Building ${file} to ${outFile}`);
       const data = await readFile(file, { encoding: "utf8" });
       const md = markdownit();
       const child = md.render(data);
       const resultHtml = await combineHtml(TEMPLATE, child);
-      const outFile = path.replace(
-        /src\/articles\/public\/(.*)\.md/,
-        "./www/$1.html",
-      );
       const htmlData = new Uint8Array(Buffer.from(resultHtml));
       await writeFile(outFile, htmlData);
-    }
+    });
   })();
+}
+
+try {
+  buildPages();
 } catch (err) {
   console.error(err);
 }

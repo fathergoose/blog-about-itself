@@ -1,0 +1,2 @@
+#!/bin/bash
+find src/static/ -type f -not -name '.*' -exec cp {} www \;

@@ -3,8 +3,6 @@
 script_dir="$(dirname "$0")"
 build_pages="$script_dir/build-pages"
 build_styles="$script_dir/build-styles"
+copy_assets="$script_dir/copy-assets"
 
-echo "running $build_pages"
-$build_pages
-echo "running $build_styles"
-$build_styles
+$build_pages && $copy_assets && $build_styles
