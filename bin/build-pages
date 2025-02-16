@@ -15,13 +15,8 @@ async function combineHtml(parentFile, childContent) {
   return result;
 }
 
-async function buildPages(sourcePath, )
-
-try {
-  const controller = new AbortController();
-  const { signal } = controller;
-
-  const TEMPLATE = "./src/templates/index.html";
+async function buildPages() {
+  const TEMPLATE = "./src/templates/articles.template.html";
 
   (async () => {
     const basePath = "./src/articles/public/";
