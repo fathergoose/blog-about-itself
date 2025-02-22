@@ -1,7 +1,3 @@
 #!/bin/bash
 
-npx @tailwindcss/cli \
-  --cwd=www \
-  --input=../src/styles/style.css \
-  --output=css/style.css
-# --minify
+find src/styles -type f -not -name '.*' -exec cp {} www/css \;
