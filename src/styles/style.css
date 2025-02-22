@@ -80,6 +80,136 @@ textarea {
   resize: vertical;
 }
 
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
@@ -89,6 +219,7 @@ textarea {
 
 body {
   margin: 0;
+  line-height: 1;
 }
 
 div.banner {
@@ -96,7 +227,32 @@ div.banner {
   position: sticky;
   top: 0;
   height: 3rem;
-  border-bottom: 1px solid oklch(0.869 0.022 252.894);
+  border-bottom: 1px solid #44d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+
+div.banner > a:link {
+  color: oklch(1 0 0); /* white */
+  margin: 0 1rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+div.banner > a:visited {
+  color: oklch(1 0 0);
+}
+
+
+
+div.banner > a:hover {
+  color: oklch(1 0 0 / 50%); /* white with 50% opacity */ */
 }
 
 .container {
@@ -105,21 +261,28 @@ div.banner {
 
 h1 {
   font-size: 3rem;
+  font-weight: bold;
+  margin: 2rem 0;
+  /* font-size: 100%; */
   /* padding: var(--text-2xl) 0 var(--text-xl) 0; */
 }
 
 h2 {
-  font-size: 1.85rem;
+  font-size: 1.5rem;
+  margin: 1.5rem 0;
+  font-weight: bold;
 }
 
 h3 {
   font-size: 1.25rem;
+  margin: 1rem 0;
+  font-weight: bold;
 }
 
 h4 {
-  font-size: 1.25rem;
-  /* padding: var(--text-xl) 0; */
-  /* font-weight: var(--font-bold); */
+  font-size: 1.125rem;
+  margin: 1rem 0;
+  /* font-weight: bold; */
 }
 /**/
 /* h5 { */
@@ -137,10 +300,15 @@ h4 {
 pre {
   background-color: oklch(0.869 0.022 252.894);
   padding: 1.25rem;
+  margin: 1.25rem 0;
+}
+pre > code {
+  font-family: "Noto Sans Mono", monospace;
 }
 
 p {
   /* padding: 1.25rem 0; */
+  margin: 1.25rem 0;
 }
 
 /* ==========================================================================
