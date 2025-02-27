@@ -48,7 +48,7 @@ async function buildArticles(template) {
     const child = md.render(data);
     const resultHtml = await combineHtml(template, child);
     const htmlData = new Uint8Array(Buffer.from(resultHtml));
-    await writeFile(outFile, htmlData);
+    await writeFile(outFile, htmlData, { flush: true });
   });
 }
 
@@ -75,7 +75,12 @@ async function buildIndex(template) {
 try {
   const TEMPLATE = "./src/templates/articles.template.html";
   await buildArticles(TEMPLATE);
-  await buildIndex(TEMPLATE);
+  // NOTE: This is def. a hack, but I'm not able to read the articles written
+  // in the first step even when using syncronous methods or supplying the
+  // flush option.
+  setTimeout(async () => {
+    await buildIndex(TEMPLATE);
+  }, 100);
 } catch (err) {
   console.error(err);
 }
