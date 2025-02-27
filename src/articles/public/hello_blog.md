@@ -1,12 +1,18 @@
-# Build, Deploy, and Host this Blog from Your Kitchen
+# Build a Simple, Static Blog with Markdown and Git
 
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+## Background
 
-## Getting Started
+One of the best ways to learn something well is to make it yourself. Even
+better to make it simple with classic ingredients. Tomato basil sauce? Maybe
+later, but now let's look at how we can cook up a traditional static website
+for our html web documents. Fire up your Gateway PC and let's write html like
+it's 1998.
 
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Well, maybe not '98 but we are going to keep things simple. The one "fancy"
+feature requirement is that we will be able write our articles in markdown and
+have them built into html pages.
 
 ```sh
 brew install fish
