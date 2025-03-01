@@ -2,8 +2,9 @@
 
 import markdownit from "markdown-it";
 import { readFile, readdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 import { Buffer } from "node:buffer";
+
+const TEMPLATE = "./src/templates/articles.template.html";
 
 async function combineHtml(parentFile, childContent) {
   const parentContent = await readFile(parentFile, "utf8");
@@ -20,7 +21,7 @@ function pathToTitle(path) {
     .join(" ");
 }
 
-function createAnchorElements(pagePaths) {
+function createLinkElements(pagePaths) {
   return pagePaths.map(
     (path) =>
       `<div class="artile-links"><a href="${path}">${pathToTitle(path)}</a></div>`,
@@ -37,50 +38,39 @@ async function buildArticles(template) {
     .filter((path) => path.slice(-3) === ".md")
     .map((fileName) => `${basePath}${fileName}`);
 
-  mdFilePaths.forEach(async (file) => {
-    const outFile = file.replace(
-      /src\/articles\/public\/(.*)\.md/,
-      "www/articles/$1.html",
-    );
-    console.log(`Building ${file} to ${outFile}`);
-    const data = await readFile(file, { encoding: "utf8" });
+  const htmlPaths = mdFilePaths.map((path) =>
+    path.replace(/src\/articles\/public\/(.*)\.md/, "www/articles/$1.html"),
+  );
+  htmlPaths.forEach(async (htmlPath, i) => {
+    const mdFilePath = mdFilePaths[i];
+    console.log(`Building ${mdFilePath} to ${htmlPath}`);
+    const data = await readFile(mdFilePaths[i], { encoding: "utf8" });
     const md = markdownit();
     const child = md.render(data);
     const resultHtml = await combineHtml(template, child);
     const htmlData = new Uint8Array(Buffer.from(resultHtml));
-    await writeFile(outFile, htmlData, { flush: true });
+    await writeFile(htmlPath, htmlData);
   });
+  return htmlPaths;
 }
 
-async function buildIndex(template) {
-  const wwwContents = await readdir("./www/articles");
-
-  const pages = wwwContents.filter(
-    (path) => path.slice(-5) === ".html" && path !== "404.html",
-  );
-
-  const outfile = "www/index.html";
-  console.log(`Building article index at ${outfile}`);
-  console.log("pages: ", pages);
-  const paths = pages.map((page) => join("/articles/", page));
-  console.log("paths: ", paths);
-  const links = createAnchorElements(paths);
-  console.log("Links: ", links);
-  const innerHTML = `<div class="link-list">\n${links.join("\n")}\n</div>`;
+async function buildIndex(template, linkPaths) {
+  const linkElements = createLinkElements(linkPaths);
+  const innerHTML = `<div class="link-list">\n${linkElements.join("\n")}\n</div>`;
   const indexPage = await combineHtml(template, innerHTML);
   const htmlData = new Uint8Array(Buffer.from(indexPage));
-  await writeFile(outfile, htmlData);
+  await writeFile("www/index.html", htmlData);
 }
 
 try {
-  const TEMPLATE = "./src/templates/articles.template.html";
-  await buildArticles(TEMPLATE);
-  // NOTE: This is def. a hack, but I'm not able to read the articles written
-  // in the first step even when using syncronous methods or supplying the
-  // flush option.
-  setTimeout(async () => {
-    await buildIndex(TEMPLATE);
-  }, 100);
+  const htmlFilePaths = await buildArticles(TEMPLATE);
+  // Remove the leading "./www"
+  const webRootPaths = htmlFilePaths.map((filePath) => filePath.slice(5));
+  const linkCount = webRootPaths.length;
+  console.log(
+    `Building index.html for ${linkCount} page${linkCount === 1 ? "" : "s"}`,
+  );
+  await buildIndex(TEMPLATE, webRootPaths);
 } catch (err) {
   console.error(err);
 }
