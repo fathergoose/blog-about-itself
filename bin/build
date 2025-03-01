@@ -1,10 +1,37 @@
 #!/bin/bash
 
 script_dir="$(dirname "$0")"
+
+clean="$script_dir/clean"
 build_pages="$script_dir/build-pages"
 copy_assets="$script_dir/copy-assets"
 build_styles="$script_dir/build-styles"
 
-$build_pages
-$copy_assets
-$build_styles
+full-build() {
+  $clean
+  $build_pages
+  $copy_assets
+  $build_styles
+}
+
+daemon() {
+  chsum1=""
+
+  while [[ true ]]; do
+    # WARNING: Change to md5sum on Linux
+    chsum2=$(find src/ -type f -exec md5 {} \;)
+    if [[ $chsum1 != $chsum2 ]]; then
+      if [ -n "$chsum1" ]; then
+        full-build
+      fi
+      chsum1=$chsum2
+    fi
+    sleep 2
+  done
+}
+
+if [[ $* == *--watch* ]]; then
+  daemon
+else
+  full-build
+fi
