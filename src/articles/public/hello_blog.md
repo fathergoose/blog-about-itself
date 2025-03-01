@@ -2,7 +2,7 @@
 
 ---
 
-## Background
+## Introduction
 
 One of the best ways to learn something well is to make it yourself. Even
 better to make it simple with classic ingredients. Tomato basil sauce? Maybe
@@ -14,26 +14,64 @@ Well, maybe not '98 but we are going to keep things simple. The one "fancy"
 feature requirement is that we will be able write our articles in markdown and
 have them built into html pages.
 
-```sh
-brew install fish
+---
+
+## Setup
+
+While there's not going to be any JavaScript on our web pages I'm going to use
+Node to handle the site generation. Setup a new project and install markdown-it
+to generate html from markdown files. We are also going to want a way to serve
+out website while we are developing so also add http-server. I typically use
+Typescript but that would just complicate things here. Prettier is always a
+good option to keep us from fussing with formatting. You'll want to configure
+your editor to use prettier to format your code on save to get the most value
+out of it, but that's an article for another day.
+
+```bash
+mkdir blog-about-itself && cd blog-about-itself
+echo '{}' > package.json
+npm install --save-dev markdown-it http-server prettier
 ```
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+And since you aren't psychopath (or game developer) throw some git on as well.
+We will need it later for deploying plus it'll allow me to share a couple
+tricks for tracking 'empty' and 'ignored' directories.
 
-```sh
-echo "void" >> /dev/null
+```bash
+git init
+echo 'node_modules' > .gitignore
+git add --all && git commit -m 'init'
 ```
 
-&nbsp;
+This is the directory structure I went with. I trust you can `mkdir`s without my
+help.
 
-## Wrapping Up
+```
+.
+├── bin
+└── src
+    ├── articles
+    │   ├── drafts
+    │   └── public
+    ├── static
+    ├── styles
+    └── templates
+```
 
-Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+And last, but not least, lets create a dummy markdown file for testing. Note
+that running `echo` with `-e` makes it interepet `\n` as the newline escape sequence
+rather than literal backslash and "n" characters.
 
-## Alternatives
+```bash
+echo -e \
+'# Build a Simple, Static Blog\n\nLorem ipsum...\n\n## Setup\n\nHello Web!' \
+> src/articles/public/hello.md
+```
 
-Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+You will likely want a more featured markdown test file for setting up styles
+but that string will get us going for now. My original test file turned into
+this article.
 
 ---
 
-Take care <3, Alex
+## Markdown to HTML
