@@ -1,0 +1,8 @@
+#!/bin/bash
+
+npx tsc &&
+  mv bin/build-pages{.js,} &&
+  chmod +x bin/build-pages &&
+  sed -i '' '1i\
+#!/usr/bin/env node
+  ' bin/build-pages
