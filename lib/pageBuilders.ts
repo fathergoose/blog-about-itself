@@ -1,22 +1,35 @@
 import markdownit from "markdown-it";
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { PathLike, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { Buffer } from "node:buffer";
+import { PathOrFileDescriptor } from "fs";
 
-function combineHtml(parentFile, childContent) {
+interface BuildItem {
+  sourcePath: PathOrFileDescriptor;
+  htmlPath: PathOrFileDescriptor;
+  webPath: string;
+  title: string;
+  previewText: string;
+}
+
+function combineHtml(parentFile: PathOrFileDescriptor, childContent: string) {
   const parentContent = readFileSync(parentFile, "utf8");
   const result = parentContent.replace("{{___article_text___}}", childContent);
   return result;
 }
 //{ path: string, title: string, previewText: string }
-function createLinkElements(articles) {
+function createLinkElements(articles: any[]) {
   return articles.map(
-    (a) => `<div class="index-links">
+    (a: {
+      webPath: any;
+      title: any;
+      previewText: any;
+    }) => `<div class="index-links">
         <a class="title-link" href="${a.webPath}">${a.title}</a>
         <p class="article-preview">${a.previewText}</p>
       </div>`,
   );
 }
-export function buildArticles(template) {
+export function buildArticles(template: string) {
   const basePath = "./src/articles/public/";
   const files = readdirSync(basePath, {
     recursive: true,
@@ -39,14 +52,14 @@ export function buildArticles(template) {
   });
   return htmlPaths;
 }
-export function buildIndex(template, articles) {
+export function buildIndex(template: string, articles: any) {
   const linkElements = createLinkElements(articles);
   const innerHTML = `<div class="link-list">\n${linkElements.join("\n")}\n</div>`;
   const indexPage = combineHtml(template, innerHTML);
   const htmlData = new Uint8Array(Buffer.from(indexPage));
   writeFileSync("www/index.html", htmlData);
 }
-export function getTitle(filePath) {
+export function getTitle(filePath: PathOrFileDescriptor) {
   const decoder = new TextDecoder();
   const data = readFileSync(filePath);
   const text = decoder.decode(data) ?? "";
@@ -56,7 +69,7 @@ export function getTitle(filePath) {
   console.log("Calculated title: ", title);
   return title ?? "";
 }
-export function buildPreviewText(filePath) {
+export function buildPreviewText(filePath: PathOrFileDescriptor) {
   const decoder = new TextDecoder();
   const data = readFileSync(filePath);
   const text = decoder.decode(data) ?? "";
@@ -66,4 +79,26 @@ export function buildPreviewText(filePath) {
   const previewText = `${text.match(regex)?.at(0)}...`;
   console.log("Calculated preview:\n", previewText);
   return previewText;
+}
+
+export function getSourceFilePaths(basePath: string) {
+  const files = readdirSync(basePath, {
+    recursive: true,
+  });
+  return files
+    .filter((path) => path.slice(-3) === ".md")
+    .map((fileName) => `${basePath}${fileName}`);
+}
+
+export function computeHtmlFilePath(path: string) {
+  return path.replace(
+    /src\/articles\/public\/(.*)\.md/,
+    "www/articles/$1.html",
+  );
+}
+
+// TODO: Use fs.path to make more robust
+export function computeWebPath(path: string) {
+  // Remove "./www"
+  return path.slice(5);
 }
