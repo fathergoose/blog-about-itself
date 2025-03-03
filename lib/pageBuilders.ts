@@ -31,7 +31,7 @@ function createLinkElements(articles: any[]) {
 }
 export function buildArticles(template: string) {
   const basePath = "./src/articles/public/";
-  const files = readdirSync(basePath, {
+  const files = <string[]>readdirSync(basePath, {
     recursive: true,
   });
   const mdFilePaths = files
@@ -82,7 +82,7 @@ export function buildPreviewText(filePath: PathOrFileDescriptor) {
 }
 
 export function getSourceFilePaths(basePath: string) {
-  const files = readdirSync(basePath, {
+  const files = <string[]>readdirSync(basePath, {
     recursive: true,
   });
   return files

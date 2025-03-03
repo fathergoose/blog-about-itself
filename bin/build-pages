@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { computeHtmlFilePath, getSourceFilePaths } from "../lib/pageBuilders";
 
 const TEMPLATE = "./src/templates/articles.template.html";

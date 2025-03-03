@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Node 20",
   "_version": "20.1.0",
-  "files": ["bin/build-pages.ts"],
+  "files": ["bin/build-pages.ts", "lib/pageBuilders.ts"],
 
   "compilerOptions": {
     "lib": ["ESNext"],
