@@ -13,8 +13,16 @@ suite("Page Building", (s) => {
     const result = getSourceFilePaths("./test/sources/");
     assert.deepStrictEqual(result, ["./test/sources/page.md"]);
   });
-  test("Compute article destination path", (t) => {});
-  test("Compute article web path", () => {});
-  test("Extract H1 for title", (t) => {});
-  test("Extract copy as preview", (t) => {});
+  test("Compute article destination path", (t) => {
+    t.todo();
+  });
+  test("Compute article web path", (t) => {
+    t.todo();
+  });
+  test("Extract H1 for title", (t) => {
+    t.todo();
+  });
+  test("Extract copy as preview", (t) => {
+    t.todo();
+  });
 });
