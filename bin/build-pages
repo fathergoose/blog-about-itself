@@ -1,27 +1,3 @@
-import { computeHtmlFilePath, getSourceFilePaths } from "../lib/pageBuilders";
+#!/bin/bash
 
-const TEMPLATE = "./src/templates/articles.template.html";
-
-try {
-  const mdSourceFilePaths = getSourceFilePaths("./src/articles/public/");
-  const articleSummeries = mdSourceFilePaths.map((mdPath) => {
-    const htmlPath = computeHtmlFilePath(mdPath);
-    const webPath = computeWebPath(htmlPath);
-    const title = extractH1Title(mdPath);
-    const previewText = extractCopyAsPreview(mdPath);
-    return {
-      mdPath,
-      htmlPath,
-      webPath,
-      title,
-      previewText,
-    };
-  });
-  const linkCount = articleSummeries.length;
-  console.log(
-    `Building index.html for ${linkCount} page${linkCount === 1 ? "" : "s"}`,
-  );
-  buildIndex(TEMPLATE, articleSummeries);
-} catch (err) {
-  console.error(err);
-}
+node lib/buildPages.js
