@@ -233,8 +233,13 @@ div.banner {
   align-items: center;
 }
 
-a:link {
+a {
   text-decoration: none;
+  color: #222;
+}
+
+div.index-links {
+  padding: 0 4rem;
 }
 
 
