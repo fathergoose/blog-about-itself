@@ -18,8 +18,11 @@ daemon() {
   chsum1=""
 
   while [[ true ]]; do
-    # WARNING: Change to md5sum on Linux
-    chsum2=$(find src/ -type f -exec md5 {} \;)
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      chsum2=$(find src/ -type f -exec md5sum {} \;)
+    else
+      chsum2=$(find src/ -type f -exec md5 {} \;)
+    fi
     if [[ $chsum1 != $chsum2 ]]; then
       if [ -n "$chsum1" ]; then
         full-build
