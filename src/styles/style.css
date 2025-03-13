@@ -330,6 +330,10 @@ p {
   border-radius: 1rem;
 }
 
+h1.index-head {
+  margin: 2rem;
+}
+
 .index-links:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.30);
 }

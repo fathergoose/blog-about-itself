@@ -46,7 +46,7 @@ git add --all && git commit -m 'init'
 This is the directory structure I went with. I trust you can `mkdir`s without my
 help.
 
-```
+```txt
 .
 ├── bin
 └── src
@@ -59,7 +59,7 @@ help.
 ```
 
 And last, but not least, lets create a dummy markdown file for testing. Note
-that running `echo` with `-e` makes it interepet `\n` as the newline escape sequence
+that running `echo` with `-e` makes it interpret `\n` as the newline escape sequence
 rather than literal backslash and "n" characters.
 
 ```bash
@@ -75,3 +75,93 @@ this article.
 ---
 
 ## Markdown to HTML
+
+The driving intent behind this project was to minimize dependencies and
+unnecessary complications. Sometimes those goals can be at odds with one
+another. However, when in doubt I want to choose to avoid unnecessary
+complication. For that reason I've chosen to rely on the third-party markdown
+library [markdown-it](https://www.npmjs.com/package/markdown-it). I don't
+remember why I chose markdown-it over marked, but I did and it's working just
+fine for me so far.
+
+```bash
+npm install --save-dev markdown-it
+```
+
+Now we are able to do something like this to create our own html articles from
+our markdown source.
+
+```JavaScript
+import markdownit from "markdown-it";
+import { readFileSync, writeFileSync } from "node:fs";
+import { Buffer } from "node:buffer";
+
+const data = readFileSync(mdFilePath, { encoding: "utf8" });
+const md = markdownit();
+const child = md.render(data);
+const htmlData = new Uint8Array(Buffer.from(child));
+writeFileSync(htmlFilePath, htmlData);
+```
+
+However, what we will get out of this isn't quite the web-ready html document we
+may have been hoping for. We can add another step and insert our generated html
+fragment into a larger html template file.
+
+```JavaScript
+import markdownit from "markdown-it";
+import { readFileSync, writeFileSync } from "node:fs";
+import { Buffer } from "node:buffer";
+
+function combineHtml(parentFile, childContent) {
+  const parentContent = readFileSync(parentFile, "utf8");
+  const result = parentContent.replace("{{___article_text___}}", childContent);
+  return result;
+}
+
+const data = readFileSync(mdFilePath, { encoding: "utf8" });
+const md = markdownit();
+const child = md.render(data);
+const resultHtml = combineHtml(templateFilePath, childContent);
+const htmlData = new Uint8Array(Buffer.from(resultHtml));
+
+writeFileSync(htmlFilePath, htmlData);
+```
+
+Here is an example of a simple html template file I've based this site off of.
+
+```html
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta name="description" content="" />
+
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:image:alt" content="" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon.png" />
+
+    <link rel="manifest" href="site.webmanifest" />
+    <meta name="theme-color" content="#fafafa" />
+  </head>
+
+  <body>
+    <div class="banner">
+      <a href="/">Home</a>
+      <a href="https://fathergoose.github.io">About</a>
+      <a href="https://www.github.com/fathergoose/blog-about-itself">Source</a>
+    </div>
+    <div class="container">{{___article_text___}}</div>
+  </body>
+</html>
+```
+
+I got the html document boilerplate from [html5boilerplate](https://html5boilerplate.com/)
