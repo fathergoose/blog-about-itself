@@ -164,4 +164,7 @@ Here is an example of a simple html template file I've based this site off of.
 </html>
 ```
 
-I got the html document boilerplate from [html5boilerplate](https://html5boilerplate.com/)
+I got the html document boilerplate from
+[html5boilerplate](https://html5boilerplate.com/). While I was there I copied
+their css boilerplate and various static boilerplate files (e.g. `favicon.ico`,
+`robots.txt`)
