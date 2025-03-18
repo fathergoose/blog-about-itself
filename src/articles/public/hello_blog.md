@@ -169,4 +169,29 @@ I got the html document boilerplate from
 their css boilerplate and various static boilerplate files (e.g. `favicon.ico`,
 `robots.txt`). I placed them in src/styles and src/static respectively.
 
-## Copying Assets
+## Copying Assets Etc.
+
+While there exists a whole ecosystem of build tools for web development, our
+needs are few. All we need to do is build our html pages and copy our static
+assets including CSS. Within `bin/` create three files named `build-pages`
+`build-styles`, and `copy-assets`. I chose to use the `find` command to find and
+copy each type of file. Separating the two actions makes sense because copying
+static assets will always be the same, but eventually I want to minifiy the CSS.
+Keeping them separating also makes natural sense from an organizational
+perspective (to me at least).
+
+### build-styles
+
+```bash
+#!/bin/bash
+
+find src/styles -type f -not -name '.*' -exec cp {} www/css \;
+```
+
+### copy-assets
+
+```bash
+#!/bin/bash
+
+find src/static/ -type f -not -name '.*' -exec cp {} www \;
+```
