@@ -168,3 +168,5 @@ I got the html document boilerplate from
 [html5boilerplate](https://html5boilerplate.com/). While I was there I copied
 their css boilerplate and various static boilerplate files (e.g. `favicon.ico`,
 `robots.txt`). I placed them in src/styles and src/static respectively.
+
+## Copying Assets
